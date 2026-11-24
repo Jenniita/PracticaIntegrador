@@ -5,6 +5,7 @@
     Todo el comportamiento lo escribís vos en JS, agregando y sacando las clases activo y seleccionado.
 -->
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,22 +13,69 @@
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Este CSS va DESPUÉS de Bootstrap: las clases de estado (activo, seleccionado) mandan. */
-        .tipos button.activo { background-color: var(--bs-warning); border-color: var(--bs-warning); color: #000; }
+        .tipos button.activo {
+            background-color: var(--bs-warning);
+            border-color: var(--bs-warning);
+            color: #000;
+        }
 
         /* Menú: los li los crea el JS, por eso se estilan desde acá */
-        .menu { list-style: none; padding: 0; margin: 0; }
-        .menu li { display: flex; align-items: center; gap: 12px; padding: 10px 12px; margin-bottom: 8px; border: 1px solid var(--bs-border-color); border-radius: var(--bs-border-radius); background-color: var(--bs-body-bg); cursor: pointer; }
-        .menu li:hover { background-color: var(--bs-tertiary-bg); }
-        .menu .emoji { font-size: 28px; }
-        .menu .nombre { font-weight: bold; flex: 1; }
-        .menu .tipo { font-size: 12px; color: var(--bs-secondary-color); }
-        .menu .precio { font-weight: bold; color: var(--bs-success); min-width: 50px; text-align: right; }
-        .menu li.seleccionado { box-shadow: inset 0 0 0 2px var(--bs-warning); background-color: var(--bs-warning-bg-subtle); }
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--bs-border-color);
+            border-radius: var(--bs-border-radius);
+            background-color: var(--bs-body-bg);
+            cursor: pointer;
+        }
+
+        .menu li:hover {
+            background-color: var(--bs-tertiary-bg);
+        }
+
+        .menu .emoji {
+            font-size: 28px;
+        }
+
+        .menu .nombre {
+            font-weight: bold;
+            flex: 1;
+        }
+
+        .menu .tipo {
+            font-size: 12px;
+            color: var(--bs-secondary-color);
+        }
+
+        .menu .precio {
+            font-weight: bold;
+            color: var(--bs-success);
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .menu li.seleccionado {
+            box-shadow: inset 0 0 0 2px var(--bs-warning);
+            background-color: var(--bs-warning-bg-subtle);
+        }
 
         /* Detalle del plato elegido */
-        .detalle-emoji { font-size: 64px; line-height: 1; }
+        .detalle-emoji {
+            font-size: 64px;
+            line-height: 1;
+        }
     </style>
 </head>
+
 <body class="bg-light">
 
     <header class="d-flex align-items-center gap-4 px-4 py-2 bg-dark shadow-sm">
@@ -54,7 +102,8 @@
 
                         <ul class="menu"></ul>
 
-                        <p class="mb-0 mt-3">Platos: <strong class="cantidad badge text-bg-dark">0</strong> · Uno de cada: <strong class="total badge bg-warning text-dark">0 €</strong></p>
+                        <p class="mb-0 mt-3">Platos: <strong class="cantidad badge text-bg-dark">0</strong> · Uno de
+                            cada: <strong class="total badge bg-warning text-dark">0 €</strong></p>
                     </div>
                 </div>
             </section>
@@ -67,7 +116,8 @@
                     <div class="card-body text-center">
                         <div class="detalle-emoji mb-2">🍽️</div>
                         <h3 class="detalle-nombre h5">Elegí un plato</h3>
-                        <p class="detalle-descripcion text-body-secondary">Hacé clic en un plato de la carta para ver el detalle.</p>
+                        <p class="detalle-descripcion text-body-secondary">Hacé clic en un plato de la carta para ver el
+                            detalle.</p>
                         <p class="detalle-precio fs-4 fw-bold text-success mb-0"></p>
                     </div>
                 </div>
@@ -93,6 +143,104 @@
         // ===== TU CÓDIGO ACÁ =====
         // Antes de cada ejercicio, escribí:
         // Decisión: <método o evento>, porque <una línea con el porqué>.
+
+        //BLOQUE B
+        //B.1 Un li por plato visible con span.emoji, span.nombre, span.tipo y span.precio ("6 €"). Si es el plato seleccionado, el li lleva la clase seleccionado.
+
+        //Decisión: <función para renderizar> Primero seleccionaremos el ul para meter los li renderizados mediante una función
+
+        //Los dos estados que pide el ejercicio
+
+        let tipoActivo = "Todos";
+        let seleccionado = null;   // el plato elegido (objeto), o null si todavía no hay
+
+        //Ahora seleccionamos el menú, donde irán los li
+        const menu = document.querySelector(".menu")
+        const li = document.querySelectorAll("li")
+        //B.2
+        const tipos = document.querySelector(".tipos")
+        const tiposBoton = document.querySelectorAll(".tipos button")
+
+        //Función para obtener visibles, en el otro ejercicio la hice dentro de renderizado, pero no se que es mejor asi que aqui la hago fuera
+        function obtenerVisibles() {
+            //B.2 Filtrado por tipos
+            if (tipoActivo != "Todos") {
+                return visibles = platos.filter(({ tipo }) => tipo === tipoActivo) //que no se me olvide el RETURN
+            } else {
+                return platos; //RETURN IMPORTANTE
+            }
+        }
+
+        console.log(obtenerVisibles())
+        //Función para renderizar
+
+        function renderizado() {
+            //Primero vaciamos el menú por su hubiera algo
+            menu.innerHTML = "";
+
+            //Hacemos la variable de visibles para los platos
+            let visibles = obtenerVisibles();
+
+            //Y ahora iremos recorriendo con un foreach metiendo los li dentro de visibles
+
+            visibles.forEach(({ emoji, nombre, tipo, precio }) => {
+                //Ahora creamos los li, donde meteremos la informacion
+                const infoPlato = document.createElement("li")
+                infoPlato.innerHTML = `<span class="emoji">${emoji}</span>
+                            <span class="nombre">${nombre}</span>
+                            <span class="tipo">${tipo}</span>
+                            <span class="precio">${precio} €</span>`
+
+                menu.appendChild(infoPlato) //Y metemos la info del plato en el menú
+
+            });
+
+            //Añadimos o quitamos la clase activo en función a si coincide con el tipoActivo
+            tiposBoton.forEach(boton =>{
+                if (tipoActivo == boton.textContent){
+                    boton.classList.add("activo")
+                } else {
+                    boton.classList.remove("activo")
+                }
+            })
+
+
+        }
+
+        //Si es seleccionado, le ponemos al li la clase seleccionado
+        menu.addEventListener("click", (evento) => {
+            const liSeleccionado = evento.target.closest("li") //Seleccionamos el li mas cercano a donde clickemos, porque sino quizás nos selecciona el span, y nosotros queremos el li entero
+
+            if (liSeleccionado === null) { //Si es null no devuelve nada
+                return;
+            } else {
+                liSeleccionado
+            }
+            liSeleccionado.classList.toggle("seleccionado") //Sino, le añadimos la clase seleccionado
+        })
+
+        //B.2 Igual que en el Bloque A: un solo listener en .tipos, el botón elegido con activo, y platos sin modificar.
+
+
+        tipos.addEventListener("click", (event) => {
+            const boton = event.target.closest("button")
+
+            if (boton === null) {
+                return
+            } else {
+                boton
+            }
+            
+            tipoActivo = boton.textContent
+
+            renderizado()
+        })
+
+        //B.3 Un solo listener en .menu. Al hacer clic en cualquier parte de un plato: buscá el li con closest("li"), leé el texto de su .nombre, buscá el plato completo en platos y guardalo en seleccionado. Después, renderizar() pinta el detalle y el resaltado.
+        
+        renderizado()
+
     </script>
 </body>
+
 </html>

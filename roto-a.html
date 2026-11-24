@@ -5,21 +5,62 @@
     No lo reescribas desde cero: encontrá cada error, corregilo y explicá en un comentario por qué fallaba.
 -->
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cine Barrio - Paso roto</title>
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .generos button.activo { background-color: var(--bs-warning); border-color: var(--bs-warning); color: #000; }
-        .cartelera { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; list-style: none; padding: 0; margin: 0; }
-        .cartelera li { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px; text-align: center; border: 1px solid var(--bs-border-color); border-radius: var(--bs-border-radius-lg); background-color: var(--bs-body-bg); box-shadow: var(--bs-box-shadow-sm); }
-        .cartelera .emoji { font-size: 40px; line-height: 1; }
-        .cartelera .titulo { font-weight: bold; }
-        .cartelera .genero { font-size: 12px; color: var(--bs-secondary-color); }
-        .cartelera .duracion { font-weight: bold; color: var(--bs-primary); }
+        .generos button.activo {
+            background-color: var(--bs-warning);
+            border-color: var(--bs-warning);
+            color: #000;
+        }
+
+        .cartelera {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 12px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cartelera li {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid var(--bs-border-color);
+            border-radius: var(--bs-border-radius-lg);
+            background-color: var(--bs-body-bg);
+            box-shadow: var(--bs-box-shadow-sm);
+        }
+
+        .cartelera .emoji {
+            font-size: 40px;
+            line-height: 1;
+        }
+
+        .cartelera .titulo {
+            font-weight: bold;
+        }
+
+        .cartelera .genero {
+            font-size: 12px;
+            color: var(--bs-secondary-color);
+        }
+
+        .cartelera .duracion {
+            font-weight: bold;
+            color: var(--bs-primary);
+        }
     </style>
 </head>
+
 <body class="bg-light">
 
     <header class="d-flex align-items-center gap-4 px-4 py-2 bg-dark shadow-sm">
@@ -44,7 +85,9 @@
 
                 <ul class="cartelera"></ul>
 
-                <p class="mb-0 mt-3">Películas: <strong class="cantidad badge text-bg-dark">0</strong> · Maratón: <strong class="total badge bg-warning text-dark">0 min</strong></p>
+                <p class="mb-0 mt-3">Películas: <strong class="cantidad badge text-bg-dark">0</strong> · Maratón:
+                    <strong class="total badge bg-warning text-dark">0 min</strong>
+                </p>
             </div>
         </section>
     </main>
@@ -73,13 +116,13 @@
 
         function obtenerVisibles() {
             if (generoActivo !== "Todos") {
-                peliculas = peliculas.filter(pelicula => pelicula.genero === generoActivo);
+                pelicula = peliculas.filter(pelicula => pelicula.genero === generoActivo);
             }
             return peliculas;
         }
 
         function renderizar() {
-            const visibles = obtenerVisibles();
+            let visibles = obtenerVisibles();
 
             botonesGenero.forEach(boton => {
                 if (boton.textContent === generoActivo) {
@@ -106,18 +149,23 @@
             cantidad.textContent = visibles.length;
             total.textContent = `${minutos} min`;
 
-            contGeneros.addEventListener("click", (event) => {
-                const boton = event.target.closest("button");
 
-                if (boton === null) return;
-
-                console.log("Filtrando por", boton.textContent);
-                generoActivo = boton.textContent;
-                renderizar();
-            });
         }
+
+        //ERROR 2, El addeventListener estaba dentro de la función renderizar()
+        contGeneros.addEventListener("click", (event) => {
+            const boton = event.target.closest("button");
+
+            if (boton === null) return;
+
+            console.log("Filtrando por", boton.textContent);
+            generoActivo = boton.textContent;
+
+            renderizar()
+        });
 
         renderizar() //ERROR 1: Faltaba llamar a la función de renderizado
     </script>
 </body>
+
 </html>

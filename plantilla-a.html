@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<!--
+    Práctica integrador - Bloque A (guiado): Cine Barrio
+    Bootstrap 5.3.3 (local, sin internet) se usa SOLO para el aspecto.
+    Todo el comportamiento lo escribís vos en JS, agregando y sacando la clase activo.
+-->
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cine Barrio - Bloque A</title>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Este CSS va DESPUÉS de Bootstrap: la clase de estado (activo) manda. */
+        .generos button.activo {
+            background-color: var(--bs-warning);
+            border-color: var(--bs-warning);
+            color: #000;
+        }
+
+        /* Cartelera: los li los crea el JS, por eso se estilan desde acá */
+        .cartelera {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 12px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cartelera li {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid var(--bs-border-color);
+            border-radius: var(--bs-border-radius-lg);
+            background-color: var(--bs-body-bg);
+            box-shadow: var(--bs-box-shadow-sm);
+        }
+
+        .cartelera .emoji {
+            font-size: 40px;
+            line-height: 1;
+        }
+
+        .cartelera .titulo {
+            font-weight: bold;
+        }
+
+        .cartelera .genero {
+            font-size: 12px;
+            color: var(--bs-secondary-color);
+        }
+
+        .cartelera .duracion {
+            font-weight: bold;
+            color: var(--bs-primary);
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <header class="d-flex align-items-center gap-4 px-4 py-2 bg-dark shadow-sm">
+        <span class="fw-bold text-warning fs-5">🎬 Cine Barrio</span>
+        <span class="text-white-50 small">Cartelera de la semana</span>
+    </header>
+
+    <main class="container py-4" style="max-width: 960px;">
+        <section class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h1 class="h5 mb-0">Cartelera</h1>
+                <span class="badge bg-warning text-dark">Bloque A</span>
+            </div>
+            <div class="card-body">
+                <div class="generos d-flex flex-wrap gap-2 mb-3">
+                    <button class="btn btn-sm btn-outline-warning text-dark activo">Todos</button>
+                    <button class="btn btn-sm btn-outline-warning text-dark">Comedia</button>
+                    <button class="btn btn-sm btn-outline-warning text-dark">Drama</button>
+                    <button class="btn btn-sm btn-outline-warning text-dark">Terror</button>
+                    <button class="btn btn-sm btn-outline-warning text-dark">Animación</button>
+                </div>
+
+                <ul class="cartelera"></ul>
+
+                <p class="mb-0 mt-3">Películas: <strong class="cantidad badge text-bg-dark">0</strong> · Maratón:
+                    <strong class="total badge bg-warning text-dark">0 min</strong>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ===== DATOS (no modificar) =====
+        const peliculas = [
+            { id: 1, titulo: "La Abuela Ninja", genero: "Comedia", duracion: 95, emoji: "🥋" },
+            { id: 2, titulo: "Noche sin Luna", genero: "Terror", duracion: 110, emoji: "🌑" },
+            { id: 3, titulo: "El Último Tren", genero: "Drama", duracion: 125, emoji: "🚂" },
+            { id: 4, titulo: "Robots de Cartón", genero: "Animación", duracion: 88, emoji: "🤖" },
+            { id: 5, titulo: "Vacaciones Desastre", genero: "Comedia", duracion: 102, emoji: "🏖️" },
+            { id: 6, titulo: "La Casa del Eco", genero: "Terror", duracion: 98, emoji: "🏚️" },
+            { id: 7, titulo: "Cartas a Marta", genero: "Drama", duracion: 117, emoji: "✉️" },
+            { id: 8, titulo: "El Gato Astronauta", genero: "Animación", duracion: 84, emoji: "🐱" }
+        ];
+
+        // ===== TU CÓDIGO ACÁ =====
+        // Antes de cada paso, escribí:
+        // Decisión: <método o evento>, porque <una línea con el porqué>.
+
+        //BLOQUE A 
+        //A.1 Creá el estado let generoActivo = "Todos"; y una función renderizar() que vacíe .cartelera y pinte un li por película con este HTML adentro:
+        //Decision: Hacemos la función renderizar con un foreach que irá recorriendo el array de peliculas rellenando los elementos que queremos
+
+        //Creamos el estado TODOS
+        let generoActivo = "Todos"
+
+        //Seleccionamos el ul, que es cartelera, donde irán todos los li
+        const cartelera = document.querySelector(".cartelera")
+        //Para el A.3 seleccionamos el contenedor de los botones
+        const contenedorBotones = document.querySelector(".generos")
+        const botonGeneros = document.querySelectorAll(".generos button") //Con el All seleccionamos TODOS los botones
+        //A.4
+        const cantidad = document.querySelector(".cantidad")
+        const total = document.querySelector(".total")
+
+        console.log(botonGeneros)
+
+
+        //Función para renderizar
+        function renderizar() {
+
+            //A.2 Escribí obtenerVisibles(): si generoActivo es "Todos", devuelve todas; si no, solo las de ese género. No modifiques peliculas. Usala en renderizar() para pintar solo las visibles.
+
+            let visibles = peliculas //del array de peliculas, se irá viendo conforme visible cambie
+            function obtenerVisibles() { //función para obtener las visibles, filtrando
+
+                if (generoActivo != "Todos") { //Si el genero activo es diferente a "Todos" filtra por el genero que tenga el estado
+                    visibles = peliculas.filter(({ genero }) => genero === generoActivo)
+                }
+
+            }
+
+            obtenerVisibles() //Y llamamos a la función
+
+            //Primero vaciamos cartelera
+            cartelera.innerHTML = "";
+
+
+            //Recorremos el array de peliculas para escribir los li dentro
+            visibles.forEach(({ titulo, genero, duracion, emoji }) => { //Para cada pelicula agregamos:
+
+
+                //Ahora creamos el li que contendrá la información de las peliculas
+                const infoPelis = document.createElement("li")
+                infoPelis.innerHTML = ` <span class="emoji">${emoji}</span>
+                            <span class="titulo">${titulo}</span>
+                            <span class="genero">${genero}</span>
+                            <span class="duracion">${duracion} min</span>`
+
+                cartelera.appendChild(infoPelis) //y metemos el li dentro del ul, cartelera
+            })
+
+
+            //En los botones de genero, los recorremos y añadimos la clase a los coincidan con el generoActivo
+            botonGeneros.forEach(boton => {
+                if (generoActivo == boton.textContent) {
+                    boton.classList.add("activo")
+                } else {
+                    boton.classList.remove("activo")
+                }
+            });
+
+            //A.4 Al final de renderizar(), mostrá en .cantidad cuántas películas se ven y en .total la suma de sus minutos ("819 min"). Solo las visibles.
+
+           total.textContent = `${visibles.reduce((acumulador, pelicula) => acumulador + pelicula.duracion, 0)} min` //Para la suma total, con reduce
+
+           cantidad.textContent = visibles.length //Para la cantidad de elementos, con lenght
+           
+            
+        }
+
+
+
+        //A.3 Poné un addEventListener en .generos, afuera de renderizar(). Adentro: buscá el botón con closest("button"), si es null cortá, guardá su textContent en generoActivo y llamá a renderizar().
+
+        //Decisión: He seleccionado el contenedor de los botones arriba, junto con la cartelera, para ahora poder añadirle el addEventListener
+
+        contenedorBotones.addEventListener("click", (evento) => {
+
+            // const boton = evento.target.closest("button") puedo declarar la variable para no tener que llamar al evento.target.closest("button") todo el rato
+
+            if (evento.target.closest("button") === null) { //Si es null
+                return
+            } else {
+                evento.target.closest("button") //Hacemos que elija el botón más cercano cuando clickemos, ya que el eventListener está en el contenedor, y a nosotros nos interesa el BOTÓN
+            }
+
+            generoActivo = evento.target.textContent
+
+            renderizar()
+        })
+
+
+        console.log(generoActivo = "Todos", renderizar())
+
+
+
+
+    </script>
+</body>
+
+</html>

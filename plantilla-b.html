@@ -154,12 +154,19 @@
         let tipoActivo = "Todos";
         let seleccionado = null;   // el plato elegido (objeto), o null si todavía no hay
 
+
+
         //Ahora seleccionamos el menú, donde irán los li
         const menu = document.querySelector(".menu")
         const li = document.querySelectorAll("li")
         //B.2
         const tipos = document.querySelector(".tipos")
         const tiposBoton = document.querySelectorAll(".tipos button")
+        //B.3
+        const detalleEmoji = document.querySelector(".detalle-emoji")
+        const detalleNombre = document.querySelector(".detalle-nombre")
+        const detalleDesc = document.querySelector(".detalle-descripcion")
+        const detallePrecio = document.querySelector(".detalle-precio")
 
         //Función para obtener visibles, en el otro ejercicio la hice dentro de renderizado, pero no se que es mejor asi que aqui la hago fuera
         function obtenerVisibles() {
@@ -171,7 +178,7 @@
             }
         }
 
-        console.log(obtenerVisibles())
+
         //Función para renderizar
 
         function renderizado() {
@@ -181,11 +188,13 @@
             //Hacemos la variable de visibles para los platos
             let visibles = obtenerVisibles();
 
+
             //Y ahora iremos recorriendo con un foreach metiendo los li dentro de visibles
 
             visibles.forEach(({ emoji, nombre, tipo, precio }) => {
                 //Ahora creamos los li, donde meteremos la informacion
                 const infoPlato = document.createElement("li")
+
                 infoPlato.innerHTML = `<span class="emoji">${emoji}</span>
                             <span class="nombre">${nombre}</span>
                             <span class="tipo">${tipo}</span>
@@ -196,13 +205,22 @@
             });
 
             //Añadimos o quitamos la clase activo en función a si coincide con el tipoActivo
-            tiposBoton.forEach(boton =>{
-                if (tipoActivo == boton.textContent){
+            tiposBoton.forEach(boton => {
+                if (tipoActivo == boton.textContent) {
                     boton.classList.add("activo")
                 } else {
                     boton.classList.remove("activo")
                 }
             })
+
+            //APARTADO DETALLE
+
+
+            detalleEmoji.textContent = seleccionado.emoji;
+            detalleNombre.textContent = seleccionado.nombre;
+            detalleDesc.textContent = seleccionado.descripcion;
+            detallePrecio.textContent = seleccionado.precio;
+
 
 
         }
@@ -217,6 +235,19 @@
                 liSeleccionado
             }
             liSeleccionado.classList.toggle("seleccionado") //Sino, le añadimos la clase seleccionado
+
+            //Para el B.3 Tenemos que leer el texto del li cuya clase es .nombre
+            const nombrePlato = liSeleccionado.querySelector(".nombre").textContent //De esta forma leemos el nombre
+
+            //Buscamos el plato en el array de platos y guardamos en seleccionado con FIND
+            const platoEncontrado = platos.find(plato => plato.nombre === nombrePlato)
+            //Guardamos en el ESTADO seleccionado el plato
+            seleccionado = platoEncontrado;
+            console.log(seleccionado)
+
+            renderizado()
+
+
         })
 
         //B.2 Igual que en el Bloque A: un solo listener en .tipos, el botón elegido con activo, y platos sin modificar.
@@ -230,14 +261,14 @@
             } else {
                 boton
             }
-            
+
             tipoActivo = boton.textContent
 
             renderizado()
         })
 
         //B.3 Un solo listener en .menu. Al hacer clic en cualquier parte de un plato: buscá el li con closest("li"), leé el texto de su .nombre, buscá el plato completo en platos y guardalo en seleccionado. Después, renderizar() pinta el detalle y el resaltado.
-        
+
         renderizado()
 
     </script>

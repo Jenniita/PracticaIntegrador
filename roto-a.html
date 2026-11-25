@@ -115,8 +115,8 @@
         const total = document.querySelector(".total");
 
         function obtenerVisibles() {
-            if (generoActivo !== "Todos") {
-                pelicula = peliculas.filter(pelicula => pelicula.genero === generoActivo);
+            if (generoActivo !== "Todos") { //ERROR 3: Faltaba el return, y que el filtro NO modique el array original
+                return visibles = peliculas.filter(pelicula => pelicula.genero === generoActivo);
             }
             return peliculas;
         }

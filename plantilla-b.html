@@ -167,6 +167,10 @@
         const detalleNombre = document.querySelector(".detalle-nombre")
         const detalleDesc = document.querySelector(".detalle-descripcion")
         const detallePrecio = document.querySelector(".detalle-precio")
+        //B.4
+        const total = document.querySelector(".total")
+        const cantidad = document.querySelector(".cantidad")
+
 
         //Función para obtener visibles, en el otro ejercicio la hice dentro de renderizado, pero no se que es mejor asi que aqui la hago fuera
         function obtenerVisibles() {
@@ -190,16 +194,23 @@
 
 
             //Y ahora iremos recorriendo con un foreach metiendo los li dentro de visibles
-
-            visibles.forEach(({ emoji, nombre, tipo, precio }) => {
+            //visibles.forEach(plato => {})
+            visibles.forEach(({ emoji, nombre, tipo, precio }, posicion) => {
                 //Ahora creamos los li, donde meteremos la informacion
                 const infoPlato = document.createElement("li")
+
 
                 infoPlato.innerHTML = `<span class="emoji">${emoji}</span>
                             <span class="nombre">${nombre}</span>
                             <span class="tipo">${tipo}</span>
                             <span class="precio">${precio} €</span>`
 
+             //Aqui, para poder añadir la clase seleccionado, hemos puesto un parametro como posicion para que en el if compare el array actual con el de seleccionado
+                if (visibles[posicion] === seleccionado) {
+                    infoPlato.classList.add("seleccionado")
+                } else {
+                    infoPlato.classList.remove("seleccionado")
+                }
                 menu.appendChild(infoPlato) //Y metemos la info del plato en el menú
 
             });
@@ -213,13 +224,23 @@
                 }
             })
 
-            //APARTADO DETALLE
+            //APARTADO DETALLE - si el estado NO es null, ponemos el texto
+            if (seleccionado != null) {
+                detalleEmoji.textContent = seleccionado.emoji;
+                detalleNombre.textContent = seleccionado.nombre;
+                detalleDesc.textContent = seleccionado.descripcion;
+                detallePrecio.textContent = `${seleccionado.precio} €`
+            }
 
+            //B.4 Cuántos platos se ven y cuánto cuesta pedir uno de cada uno de los visibles.
+            //Decisión <length y reduce> Lenght para la cantidad de platos, pues será el tamaño del array, y reduce para sumar el precio de cada objeto visible
 
-            detalleEmoji.textContent = seleccionado.emoji;
-            detalleNombre.textContent = seleccionado.nombre;
-            detalleDesc.textContent = seleccionado.descripcion;
-            detallePrecio.textContent = seleccionado.precio;
+            //total con reduce
+            total.textContent = `${visibles.reduce((acumulador, plato) => acumulador + plato.precio, 0)} €`
+
+            //cantidad con length
+            cantidad.textContent = visibles.length
+
 
 
 
@@ -231,10 +252,7 @@
 
             if (liSeleccionado === null) { //Si es null no devuelve nada
                 return;
-            } else {
-                liSeleccionado
-            }
-            liSeleccionado.classList.toggle("seleccionado") //Sino, le añadimos la clase seleccionado
+            } 
 
             //Para el B.3 Tenemos que leer el texto del li cuya clase es .nombre
             const nombrePlato = liSeleccionado.querySelector(".nombre").textContent //De esta forma leemos el nombre
@@ -243,7 +261,7 @@
             const platoEncontrado = platos.find(plato => plato.nombre === nombrePlato)
             //Guardamos en el ESTADO seleccionado el plato
             seleccionado = platoEncontrado;
-            console.log(seleccionado)
+
 
             renderizado()
 
@@ -258,16 +276,15 @@
 
             if (boton === null) {
                 return
-            } else {
-                boton
-            }
-
+            } 
             tipoActivo = boton.textContent
 
             renderizado()
         })
 
         //B.3 Un solo listener en .menu. Al hacer clic en cualquier parte de un plato: buscá el li con closest("li"), leé el texto de su .nombre, buscá el plato completo en platos y guardalo en seleccionado. Después, renderizar() pinta el detalle y el resaltado.
+
+
 
         renderizado()
 
